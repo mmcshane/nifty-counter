@@ -2,7 +2,6 @@
 
 #include "someservice.hpp"
 
-
 namespace mpm
 {
     inline void get_busy(uint32_t n)
