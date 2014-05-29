@@ -7,7 +7,10 @@ namespace mpm
     class some_service
     {
     public:
+        some_service();
         void do_a_thing() const;
+
+        static uint32_t instance_count;
     };
 
 
@@ -16,25 +19,10 @@ namespace mpm
 
     namespace detail
     {
-        static class initializer
+        static struct some_service_ginit
         {
-        public:
-            initializer()
-            {
-                if(0 == count++)
-                    init_global();
-            }
-
-
-            ~initializer()
-            {
-                if(0 == --count)
-                    cleanup_global();
-            }
-        private:
-            static uint32_t count;
-            static void init_global();
-            static void cleanup_global();
-        } shhhhh;
+            some_service_ginit();
+            ~some_service_ginit();
+        } shhhh;
     }
 }

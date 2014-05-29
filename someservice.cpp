@@ -7,6 +7,13 @@ namespace mpm
         __attribute__ ((aligned(__alignof__(some_service))));
     some_service& global_service = reinterpret_cast<some_service&>(svc_data);
 
+    uint32_t some_service::instance_count;
+
+    some_service::some_service()
+    {
+        instance_count++;
+    }
+
 
     void
     some_service::do_a_thing() const
@@ -18,19 +25,24 @@ namespace mpm
 
     namespace detail
     {
-        uint32_t initializer::count = 0;
+        namespace { uint32_t nifty_ctr; }
 
-        void
-        initializer::init_global()
+
+        some_service_ginit::some_service_ginit()
         {
-            new (&global_service) some_service();
+            if(0 == nifty_ctr++)
+            {
+                new (&global_service) some_service();
+            }
         }
 
 
-        void
-        initializer::cleanup_global()
+        some_service_ginit::~some_service_ginit()
         {
-            (&global_service)->~some_service();
+            if(0 == --nifty_ctr)
+            {
+                (&global_service)->~some_service();
+            }
         }
     }
 }
